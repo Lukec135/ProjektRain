@@ -7,12 +7,6 @@ var userSchema = new Schema({
 	'email' : String,
 	'password' : String,
 
-	'questions' : [
-		{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }
-	],
-	'answers' : [
-		{ type: mongoose.Schema.Types.ObjectId, ref: 'Answer' }
-	]
 });
 
 userSchema.statics.authenticate = function(username, password, callback){
