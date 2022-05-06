@@ -1,0 +1,7 @@
+<h1>Moji paketniki</h1>
+{{#each paketniki}}
+    <h2>{{naziv}}</h2>
+    <p class="datum">{{paketnik.createdAt}}</p>
+
+    <a href="http://localhost:3000/paketnik/{{_id}}">Prikaži več</a>
+{{/each}}
