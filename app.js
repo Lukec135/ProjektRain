@@ -14,7 +14,8 @@ var paketnikiRouter = require('./routes/paketnikRoutes');
 
 var mongoose = require('mongoose');
 //var mongoDB = 'mongodb://127.0.0.1/ProjektRain';
-var mongoDB = "mongodb+srv://user:KhTB0fF7ARdkcYIv@projektrain.roqxq.mongodb.net/ProjectRain?retryWrites=true&w=majority";
+//var mongoDB = "mongodb+srv://user:KhTB0fF7ARdkcYIv@projektrain.roqxq.mongodb.net/ProjectRain?retryWrites=true&w=majority";
+var mongoDB = "mongodb+srv://user:KhTB0fF7ARdkcYIv@projektrain.roqxq.mongodb.net/ProjectRain?retryWrites=true&w=majority"
 
 mongoose.connect(mongoDB);
 mongoose.Promise = global.Promise;

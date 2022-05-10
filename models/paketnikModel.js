@@ -5,6 +5,12 @@ var paketnikSchema = new Schema({
     'naziv': String,
     'lastnikId': String,
     'odklepi': [Date],
+    'odklenilId': [String],
+
+    'abc': [{
+        'date': Date,
+        'oseba': String
+    }]
 
 }, {
     timestamps: true
