@@ -4,11 +4,9 @@ var Schema = mongoose.Schema;
 var paketnikSchema = new Schema({
     'naziv': String,
     'lastnikId': String,
-    'odklepi': [Date],
-    'odklenilId': [String],
 
-    'abc': [{
-        'date': Date,
+    'odklepi': [{
+        'datum': Date,
         'oseba': String
     }]
 

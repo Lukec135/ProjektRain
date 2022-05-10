@@ -1,14 +1,12 @@
 <h1>Paketnik {{paketnik.naziv}}</h1>
 
-<p>{{paketnik._id}}</p>
+<p>ID: {{paketnik._id}}</p>
 <a href="http://localhost:3000/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
 
-<br>
+<br><br>
 <h2>Dnevnik odklepov:</h2>
-{{#each paketnik.odklepi}}
-    <span><i>{{this}}</i></span> <span><i>{{odklenilId}}</i></span> <br><br>
-{{/each}}
 
-{{#each paketnik.odklenilId}}
-    <span><i>{{this}}</i></span><br><br>
+
+{{#each paketnik.odklepi}}
+    <span><i>{{this.[oseba]}} — {{this.[datum]}}</i></span> <br><br>
 {{/each}}

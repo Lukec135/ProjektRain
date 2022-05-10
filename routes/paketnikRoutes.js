@@ -24,7 +24,7 @@ router.get('/list', requiresLogin, paketnikController.list);
  * GET
  */
 router.get('/:id', paketnikController.show);
-router.get('/odklep/:id', requiresLogin, paketnikController.odklep, paketnikController.show);
+router.get('/odklep/:id', requiresLogin, paketnikController.odklep);
 
 /*
  * POST
