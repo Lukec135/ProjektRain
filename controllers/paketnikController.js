@@ -8,7 +8,7 @@ var UserModel = require('../models/userModel.js');
  */
 module.exports = {
 
-    dodaj: function(req, res){
+    dodaj: function (req, res) {
         return res.render('paketnik/dodaj');
     },
 
@@ -17,7 +17,7 @@ module.exports = {
      */
     list: function (req, res) {
         let query = {lastnikId: req.session.userId};
-        PaketnikModel.find(query,function (err, paketniki) {
+        PaketnikModel.find(query, function (err, paketniki) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting paketnik.',
@@ -64,8 +64,8 @@ module.exports = {
      */
     create: function (req, res) {
         let paketnik = new PaketnikModel({
-            naziv : req.body.naziv,
-            lastnikId : req.session.userId,
+            naziv: req.body.naziv,
+            lastnikId: req.session.userId,
 
         });
 
@@ -102,7 +102,7 @@ module.exports = {
                 });
             }
 
-            
+
             paketnik.save(function (err, paketnik) {
                 if (err) {
                     return res.status(500).json({

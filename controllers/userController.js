@@ -22,49 +22,49 @@ module.exports = {
         });
     },
 
-    showLogin: function(req, res){
+    showLogin: function (req, res) {
         res.render('user/login');
     },
 
-    showRegister: function(req, res){
+    showRegister: function (req, res) {
         res.render('user/register');
     },
 
-    login: function(req, res, next){
-        userModel.authenticate(req.body.username, req.body.password, function(error, user){
-           if(error || !user){
-               var err = new Error("Wrong username or password");
-               err.status = 401;
-               return next(err);
-           } else{
-               req.session.userId = user._id;
-               req.session.userName = user.username;
-               return res.redirect('profile');
-           }
+    login: function (req, res, next) {
+        userModel.authenticate(req.body.username, req.body.password, function (error, user) {
+            if (error || !user) {
+                var err = new Error("Wrong username or password");
+                err.status = 401;
+                return next(err);
+            } else {
+                req.session.userId = user._id;
+                req.session.userName = user.username;
+                return res.redirect('profile');
+            }
         });
     },
 
-    profile: function(req, res, next){
+    profile: function (req, res, next) {
         userModel.findById(req.session.userId)
-            .exec(function( error, user){
-                if(error){
+            .exec(function (error, user) {
+                if (error) {
                     return next(error);
                 } else {
-                    if (user === null){
+                    if (user === null) {
                         var err = new Error("Not authorized! Go back!");
                         err.status = 400;
                         return next(err);
-                    } else{
+                    } else {
                         res.render('user/profile', user);
                     }
                 }
             });
     },
 
-    logout: function (req,res,next){
-        if(req.session){
-            req.session.destroy(function(err){
-                if(err){
+    logout: function (req, res, next) {
+        if (req.session) {
+            req.session.destroy(function (err) {
+                if (err) {
                     return next(err);
                 } else {
                     return res.redirect('/');
@@ -99,9 +99,9 @@ module.exports = {
      */
     create: function (req, res) {
         var user = new userModel({
-			username : req.body.username,
-			email : req.body.email,
-			password : req.body.password
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password
 
         });
 
@@ -136,9 +136,9 @@ module.exports = {
             }
 
             user.username = req.body.username ? req.body.username : user.username;
-			user.email = req.body.email ? req.body.email : user.email;
-			user.password = req.body.password ? req.body.password : user.password;
-			
+            user.email = req.body.email ? req.body.email : user.email;
+            user.password = req.body.password ? req.body.password : user.password;
+
             user.save(function (err, user) {
                 if (err) {
                     return res.status(500).json({
