@@ -8,7 +8,50 @@ var UserModel = require('../models/userModel.js');
  */
 module.exports = {
 
-    dodaj: function (req, res) {
+
+    odklep: function (req, res, next) {
+        let paketnikId = req.params.id;
+        let odklenilId = req.session.userId //oseba, ki odklepa, ni nujno lastnik
+
+        PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik',
+                    error: err
+                });
+            }
+
+            if (!paketnik) {
+                return res.status(404).json({
+                    message: 'No such paketnik'
+                });
+            }
+
+            paketnik.odklenilId.push(odklenilId)
+
+            paketnik.odklepi.push(Date.now())
+
+            /*paketnik.abc.insertOne(
+                {
+                    'date': Date.now(),
+                    'oseba': odklenilId
+                }
+            )
+*///asdasdasd //asdasd//asdasddas
+            paketnik.save(function (err, paketnik) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating paketnik.',
+                        error: err
+                    });
+                }
+
+                next();
+            });
+        });
+    },
+
+    dodaj: function(req, res){
         return res.render('paketnik/dodaj');
     },
 
