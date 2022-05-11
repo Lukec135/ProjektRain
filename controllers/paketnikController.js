@@ -8,7 +8,6 @@ var UserModel = require('../models/userModel.js');
  */
 module.exports = {
 
-
     odklep: function (req, res) {
         let paketnikId = req.params.id;
         let odklenilId = req.session.userId
@@ -27,14 +26,20 @@ module.exports = {
                     message: 'No such paketnik'
                 });
             }
+            //ali ima uporabnik pravico za odklep
+            if(paketnik.osebeZDostopom.includes(odklenilId)) {
+                paketnik.odklepi.push(
+                    {
+                        'datum': Date.now(),
+                        'oseba': odklenilUsername
+                    }
+                )
+            }
+            else {
+                return res.render('paketnik/neavtoriziran');
+            }
 
-
-            paketnik.odklepi.push(
-                {
-                    'datum': Date.now(),
-                    'oseba': odklenilUsername
-                }
-            )
+            //push notifications za več točk
 
             paketnik.save(function (err, paketnik) {
                 if (err) {
@@ -52,7 +57,30 @@ module.exports = {
         });
     },
 
-    dodaj: function(req, res){
+    dodajOseboZDostopom: function (req, res) {
+        let id = req.params.id;
+
+        PaketnikModel.findOne({_id: id}, function (err, paketnik) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik.',
+                    error: err
+                });
+            }
+
+            if (!paketnik) {
+                return res.status(404).json({
+                    message: 'No such paketnik'
+                });
+            }
+
+            //paketnik.osebeZDostopom.push(req.body.osebaId)
+
+            return res.render('paketnik/list');
+        });
+    },
+
+    dodaj: function(req, res) {
         return res.render('paketnik/dodaj');
     },
 
@@ -112,6 +140,9 @@ module.exports = {
             naziv: req.body.naziv,
             lastnikId: req.session.userId,
 
+            osebeZDostopom: req.session.userId,
+
+            poln: false
         });
 
         paketnik.save(function (err, paketnik) {

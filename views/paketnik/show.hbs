@@ -1,11 +1,20 @@
 <h1>Paketnik {{paketnik.naziv}}</h1>
 
 <p>ID: {{paketnik._id}}</p>
+
+<p>Poln:
+{{#if paketnik.poln}}
+    <span>da</span>
+{{else}}
+    <spa>ne</spa>
+{{/if}}
+</p>
+
 <a href="http://localhost:3000/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
 
 <br><br>
 <h2>Dnevnik odklepov:</h2>
-
+<!-- v show se mora narediti tabela namesto navadnega izpisa dnevnika -->
 
 {{#each paketnik.odklepi}}
     <span><i>{{this.[oseba]}} — {{this.[datum]}}</i></span> <br><br>
