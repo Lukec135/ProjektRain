@@ -4,7 +4,7 @@ var UserModel = require('../models/userModel.js');
 /**
  * paketnikController.js
  *
- * @description :: Server-side logic for managing paketniks.
+ * @description :: Server-side logic for managing paketniki.
  */
 module.exports = {
 
