@@ -9,9 +9,10 @@ var UserModel = require('../models/userModel.js');
 module.exports = {
 
 
-    odklep: function (req, res, next) {
+    odklep: function (req, res) {
         let paketnikId = req.params.id;
-        let odklenilId = req.session.userId //oseba, ki odklepa, ni nujno lastnik
+        let odklenilId = req.session.userId
+        let odklenilUsername = req.session.userName //oseba, ki odklepa, ni nujno lastnik
 
         PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
             if (err) {
@@ -27,17 +28,14 @@ module.exports = {
                 });
             }
 
-            paketnik.odklenilId.push(odklenilId)
 
-            paketnik.odklepi.push(Date.now())
-
-            /*paketnik.abc.insertOne(
+            paketnik.odklepi.push(
                 {
-                    'date': Date.now(),
-                    'oseba': odklenilId
+                    'datum': Date.now(),
+                    'oseba': odklenilUsername
                 }
             )
-*///asdasdasd //asdasd//asdasddas
+
             paketnik.save(function (err, paketnik) {
                 if (err) {
                     return res.status(500).json({
@@ -46,7 +44,10 @@ module.exports = {
                     });
                 }
 
-                next();
+                let data = [];
+                data.paketnik = paketnik;
+
+                return res.render('paketnik/odklenjen', data);
             });
         });
     },
@@ -96,6 +97,7 @@ module.exports = {
 
             let data = [];
             data.paketnik = paketnik;
+
 
             //return res.json(paketnik);
             return res.render('paketnik/show', data);
