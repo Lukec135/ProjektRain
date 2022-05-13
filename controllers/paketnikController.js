@@ -123,7 +123,7 @@ module.exports = {
             }
 
             //return res.status(201).json(paketnik);
-            return res.redirect('http://localhost:3000/paketnik/list');
+            return res.redirect('https://silent-eye-350012.oa.r.appspot.com/paketnik/list');
         });
     },
 
