@@ -1,16 +1,22 @@
 var mongoose = require('mongoose');
-var Schema   = mongoose.Schema;
+var Schema = mongoose.Schema;
 
 var paketnikSchema = new Schema({
     'naziv': String,
     'lastnikId': String,
-    'odklepi': [Date],
-    'odklenilId': [String],
 
-    'abc': [{
-        'date': Date,
+    //seznam oseb, ki lahko dostopajo do paketa
+    'osebeZDostopom': [String],
+
+    'odklepi': [{
+        'datum': Date,
         'oseba': String
-    }]
+    }],
+
+    //bool ali je prazen ali poln
+    'poln': Boolean
+
+    //tokens za prijavo
 
 }, {
     timestamps: true

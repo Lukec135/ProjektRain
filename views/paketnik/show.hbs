@@ -1,14 +1,22 @@
 <h1>Paketnik {{paketnik.naziv}}</h1>
 
-<p>{{paketnik._id}}</p>
-<a href="http://localhost:3000/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
+<p>ID: {{paketnik._id}}</p>
 
-<br>
+<p>Poln:
+{{#if paketnik.poln}}
+    <span>da</span>
+{{else}}
+    <spa>ne</spa>
+{{/if}}
+</p>
+
+<!--<a href="http://localhost:3000/paketnik/odklep/{{!paketnik._id}}">Odkleni</a>-->
+<a href="https://silent-eye-350012.oa.r.appspot.com/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
+
+<br><br>
 <h2>Dnevnik odklepov:</h2>
-{{#each paketnik.odklepi}}
-    <span><i>{{this}}</i></span> <span><i>{{odklenilId}}</i></span> <br><br>
-{{/each}}
+<!-- v show se mora narediti tabela namesto navadnega izpisa dnevnika -->
 
-{{#each paketnik.odklenilId}}
-    <span><i>{{this}}</i></span><br><br>
+{{#each paketnik.odklepi}}
+    <span><i>{{this.[oseba]}} — {{this.[datum]}}</i></span> <br><br>
 {{/each}}
