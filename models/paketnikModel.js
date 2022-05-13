@@ -5,10 +5,18 @@ var paketnikSchema = new Schema({
     'naziv': String,
     'lastnikId': String,
 
+    //seznam oseb, ki lahko dostopajo do paketa
+    'osebeZDostopom': [String],
+
     'odklepi': [{
         'datum': Date,
         'oseba': String
-    }]
+    }],
+
+    //bool ali je prazen ali poln
+    'poln': Boolean
+
+    //tokens za prijavo
 
 }, {
     timestamps: true
