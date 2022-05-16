@@ -154,7 +154,7 @@ module.exports = {
             }
 
             //return res.status(201).json(paketnik);
-            return res.redirect('https://silent-eye-350012.oa.r.appspot.com/paketnik/list');
+            return res.redirect('/paketnik/list');
         });
     },
 
