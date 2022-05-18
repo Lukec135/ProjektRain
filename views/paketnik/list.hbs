@@ -1,8 +1,22 @@
-<h1>Moji paketniki</h1>
+<div><h1 style="font-size: 35px;">Moji paketniki</h1>
 {{#each paketniki}}
-    <h2>{{naziv}}</h2>
 
-    <p class="datum">{{paketnik.createdAt}}</p>
 
-    <a href="/paketnik/{{_id}}">Prikaži več</a>
+
+
+   <!-- <a style="text-decoration: none; color: black; " href="http://localhost:3000/paketnik/{{!_id}}">
+        <img style="width: 7%;height: 7%;" src="https://www.direct4.me/Portals/_default/Skins/D4ME-WEB/images/d-box.png">
+  <h3>{{naziv}}</h3>
+    </a>-->
+
+
+    <div id="container" style="padding: 5px; display: flex;">
+        <a style="text-decoration: none; color: black;" href="http://localhost:3000/paketnik/{{!_id}}"><table><tr ><td><img alt="slikaPaketnika" style="width: 35%;height: 35%;" src="https://www.direct4.me/Portals/_default/Skins/D4ME-WEB/images/d-box.png"></td> <td>  <h3>{{naziv}}</h3></td></tr></table></a>
+    </div>
+    <!-- <p class="datum">{{paketnik.createdAt}}</p>-->
+
+        <!--<a href="https://silent-eye-350012.oa.r.appspot.com/paketnik/{{_id}}">Prikaži več</a>-->
+
+
 {{/each}}
+</div>
