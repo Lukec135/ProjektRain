@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
 
 
 //------------------------------------//
@@ -22,12 +23,49 @@ mongoose.Promise = global.Promise;
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error'));
 
+
+
 var app = express();
+
+
+exphbs = require("express-handlebars");
+
+var hbs = require('handlebars');
+
+//REGISTER HELPERS
+hbs.registerHelper('dateformat', require('helper-dateformat'));
+
+hbs.registerHelper('ifeq', function (a, b, options) {
+    if (a == b) { return options.fn(this); }
+    return options.inverse(this);
+});
+
+hbs.registerHelper('ifnoteq', function (a, b, options) {
+    if (a != b) { return options.fn(this); }
+    return options.inverse(this);
+});
+
+///////////////////
+
+app.engine('hbs', exphbs.engine({
+    defaultLayout: "layout.hbs",
+    extname: ".hbs",
+    helpers: {
+
+    },
+    //partialsDir: "views/partials/", // same as default, I just like to be explicit
+    layoutsDir: "views/layouts/" // same as default, I just like to be explicit
+}));
+
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
+
+
+
+
 
 var session = require('express-session');
 var MongoStore = require('connect-mongo');
@@ -42,7 +80,12 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: false }));
+//app.use(express.static(path.join(__dirname, 'public')));
+
+//app.use('/images', express.static('images'));
+app.use(express.static(__dirname+'/public'));
+app.use(express.static('images'));
 
 
 //------------------------------------//
@@ -67,6 +110,17 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+
+app.post('/paketnik/odstraniOseboZDostopom', function(req, res) {
+
+    console.log(JSON.stringify(req.body));
+    res.send(req.body.self);
+});
+
+
+
 
 
 module.exports = app;

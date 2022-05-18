@@ -39,7 +39,7 @@ module.exports = {
             } else {
                 req.session.userId = user._id;
                 req.session.userName = user.username;
-                return res.redirect('profile');
+                res.render('index', {title: 'Pametni paketnik'});
             }
         });
     },
@@ -61,15 +61,19 @@ module.exports = {
             });
     },
 
-    logout: function (req, res, next) {
+    logout: function (req, res) {
         if (req.session) {
             req.session.destroy(function (err) {
                 if (err) {
-                    return next(err);
+                    res.render('user/login')
                 } else {
-                    return res.redirect('/');
+                    res.render('user/login')
                 }
             });
+        }
+        else
+        {
+            res.render('user/login')
         }
     },
 
@@ -98,23 +102,39 @@ module.exports = {
      * userController.create()
      */
     create: function (req, res) {
-        var user = new userModel({
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
 
-        });
-
-        user.save(function (err, user) {
+        userModel.findOne({username: req.body.username}, function (err, user0) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when creating user',
+                    message: 'Error when getting user',
                     error: err
                 });
             }
-            //return res.status(201).json(user);
-            return res.redirect('/');
+            if (!user0) {
+                let user = new userModel({
+                    username: req.body.username,
+                    email: req.body.email,
+                    password: req.body.password
+
+                });
+
+                user.save(function (err, user) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when creating user',
+                            error: err
+                        });
+                    }
+                    //return res.status(201).json(user);
+                    res.render('user/login')
+                });
+            } else {
+                return res.status(500).json({
+                    message: 'Uporabniško ime ze obstaja.',
+                });
+            }
         });
+
     },
 
     /**

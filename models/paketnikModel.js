@@ -6,7 +6,10 @@ let paketnikSchema = new Schema({
     'lastnikId': String,
 
     //seznam oseb, ki lahko dostopajo do paketa
-    'osebeZDostopom': [String],
+    'osebeZDostopom': [{
+        'osebaId': String,
+        'osebaUsername': String
+    }],
 
     'odklepi': [{
         'datum': Date,

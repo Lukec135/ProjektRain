@@ -1,9 +1,10 @@
-<div><h1 style="font-size: 35px;">Dodaj paketnik</h1>
+<h1>Dodaj paketnik</h1>
 <form action="/paketnik" method="post">
-    <br>
-    <p>Naziv paketnika: <input type="text" name="naziv" required></p>
-    <br>
+    <label>Naziv paketnika: <input type="text" name="naziv" required></label><br><br><br><br>
+
     <input type="hidden" name="lastnikId" value="{{req.session.userId}}">
-    <input type="submit" value="DODAJ">
+
+    <div class="tp">
+        <input type="submit" value="Dodaj">
+    </div>
 </form>
-</div>

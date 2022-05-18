@@ -25,11 +25,15 @@ router.get('/list', requiresLogin, paketnikController.list);
  */
 router.get('/:id', paketnikController.show);
 router.get('/odklep/:id', requiresLogin, paketnikController.odklep);
+router.get('/odstrani/:id', paketnikController.remove);
+
 
 /*
  * POST
  */
 router.post('/', paketnikController.create);
+router.post('/dodajOseboZDostopom', paketnikController.dodajOseboZDostopom);
+router.post('/odstraniOseboZDostopom', paketnikController.odstraniOseboZDostopom);
 
 /*
  * PUT

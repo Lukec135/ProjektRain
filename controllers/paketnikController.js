@@ -1,5 +1,6 @@
 var PaketnikModel = require('../models/paketnikModel.js');
 var UserModel = require('../models/userModel.js');
+const e = require("express");
 
 /**
  * paketnikController.js
@@ -26,39 +27,55 @@ module.exports = {
                     message: 'No such paketnik'
                 });
             }
+
             //ali ima uporabnik pravico za odklep
-            if(paketnik.osebeZDostopom.includes(odklenilId)) {
+            let found = false;
+            for (let key in paketnik.osebeZDostopom) {
+                if (paketnik.osebeZDostopom.hasOwnProperty(key)) {
+                    if (paketnik.osebeZDostopom[key].osebaId == req.session.userId)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if(found) {
                 paketnik.odklepi.push(
                     {
                         'datum': Date.now(),
                         'oseba': odklenilUsername
                     }
                 )
+                paketnik.save(function (err, paketnik) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when updating paketnik.',
+                            error: err
+                        });
+                    }
+
+                    let data = [];
+                    data.paketnik = paketnik;
+
+                    return res.render('paketnik/odklenjen', data);
+                });
             }
             else {
                 return res.render('paketnik/neavtoriziran');
             }
 
+
             //push notifications za več točk
 
-            paketnik.save(function (err, paketnik) {
-                if (err) {
-                    return res.status(500).json({
-                        message: 'Error when updating paketnik.',
-                        error: err
-                    });
-                }
 
-                let data = [];
-                data.paketnik = paketnik;
-
-                return res.render('paketnik/odklenjen', data);
-            });
         });
     },
 
     dodajOseboZDostopom: function (req, res) {
-        let id = req.params.id;
+        let id = req.body.paketnikId;
+        let username1 = req.body.username;
+
 
         PaketnikModel.findOne({_id: id}, function (err, paketnik) {
             if (err) {
@@ -74,9 +91,90 @@ module.exports = {
                 });
             }
 
-            //paketnik.osebeZDostopom.push(req.body.osebaId)
+            UserModel.findOne({username: username1}, function (err, user) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting user.',
+                        error: err
+                    });
+                }
 
-            return res.render('paketnik/list');
+                if (!user) {
+                    return res.status(404).json({
+                        message: 'No such user'
+                    });
+                }
+
+                let found = false;
+                for (let key in paketnik.osebeZDostopom) {
+                    if (paketnik.osebeZDostopom.hasOwnProperty(key)) {
+                        if (paketnik.osebeZDostopom[key].osebaId == user._id)
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if(!found) {
+                    paketnik.osebeZDostopom.push(
+                        {
+                            'osebaId': user._id,
+                            'osebaUsername': user.username
+                        }
+                    )
+
+                    paketnik.save(function (err, paketnik) {
+                        if (err) {
+                            return res.status(500).json({
+                                message: 'Error when updating paketnik.',
+                                error: err
+                            });
+                        }
+
+                        return res.redirect('back');
+                    });
+                }
+                else
+                {
+                    return res.redirect('back');
+                }
+            });
+        });
+    },
+
+    odstraniOseboZDostopom: function (req, res) {
+        let paketnikId = req.body.paketnikId
+        let osebaIndex = req.body.osebaIndex
+
+
+        PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik.',
+                    error: err
+                });
+            }
+            if (!paketnik) {
+                return res.status(404).json({
+                    message: 'No such paketnik'
+                });
+            }
+
+            paketnik.osebeZDostopom.splice(osebaIndex, 1);
+
+            paketnik.save(function (err, paketnik) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating paketnik.',
+                        error: err
+                    });
+                }
+
+                return res.redirect('back');
+            });
+
+
         });
     },
 
@@ -100,7 +198,7 @@ module.exports = {
             data.paketniki = paketniki;
 
             return res.render('paketnik/list', data);
-        });
+        }).lean();
     },
 
     /**
@@ -129,7 +227,7 @@ module.exports = {
 
             //return res.json(paketnik);
             return res.render('paketnik/show', data);
-        });
+        }).lean();
     },
 
     /**
@@ -140,7 +238,12 @@ module.exports = {
             naziv: req.body.naziv,
             lastnikId: req.session.userId,
 
-            osebeZDostopom: req.session.userId,
+            osebeZDostopom: (
+                {
+                    'osebaId': req.session.userId,
+                    'osebaUsername': req.session.userName
+                }
+            ),
 
             poln: false
         });
@@ -206,7 +309,7 @@ module.exports = {
                 });
             }
 
-            return res.status(204).json();
+            return res.redirect('/paketnik/list');
         });
     }
 };
