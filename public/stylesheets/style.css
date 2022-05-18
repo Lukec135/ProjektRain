@@ -3,7 +3,7 @@ html{
 }
 
 body {
-    padding: 0px;
+    padding: 0;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     text-align: left;
 
@@ -29,7 +29,6 @@ ul {
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #262626;
     display: flex;
     justify-content: center;
     background-color:#00afc3;
@@ -111,14 +110,6 @@ p{
     font-size: 25px;
 }
 
-#odjava{
-    background-color: darkgray;
-    color: black;
-    border: none;
 
-    margin-left: 30px;
-    font-size: 25px;
-
-}
 
 
