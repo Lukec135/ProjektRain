@@ -58,13 +58,13 @@
 
 <table style="width:100%" class="DnevnikOdklepov">
     <tr>
-        <th>Odprl</th>
-        <th>datum in čas</th>
+        <th class="rowsDnevnik">Odprl</th>
+        <th class="rowsDnevnik">datum in čas</th>
     </tr>
 {{#each paketnik.odklepi}}
-    <tr>
-        <td>{{this.[oseba]}}</td>
-        <td><i>{{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></td>
+    <tr class="tableRowsDnevnik">
+        <td class="rowsDnevnik">{{this.[oseba]}}</td>
+        <td class="rowsDnevnik"><i>{{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></td>
     </tr>
 {{/each}}
 

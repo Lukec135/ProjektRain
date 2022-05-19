@@ -109,3 +109,18 @@ button {
 button:hover{
     background-color: #111111;
 }
+
+.DnevnikOdklepov{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.rowsDnevnik {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tableRowsDnevnik:hover {
+    background-color: coral;
+}
