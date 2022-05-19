@@ -56,9 +56,19 @@
 <!-- v show se mora narediti tabela namesto navadnega izpisa dnevnika -->
 
 
-
+<table style="width:100%" class="DnevnikOdklepov">
+    <tr>
+        <th>Odprl</th>
+        <th>datum in čas</th>
+    </tr>
 {{#each paketnik.odklepi}}
-    <span><i>{{this.[oseba]}} — {{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></span> <br><br>
+    <tr>
+        <td>{{this.[oseba]}}</td>
+        <td><i>{{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></td>
+    </tr>
 {{/each}}
+
+</table>
+
 
 
