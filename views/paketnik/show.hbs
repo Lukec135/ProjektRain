@@ -2,7 +2,8 @@
 
 <p>ID: {{paketnik._id}}</p>
 
-<a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a>
+
+<button type="button"><a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a></button>
 
 <p>Poln:
 {{#if paketnik.poln}}
@@ -12,8 +13,7 @@
 {{/if}}
 </p>
 
-
-<a href="/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
+<button type="button"><a href="/paketnik/odklep/{{paketnik._id}}">Odkleni</a></button>
 
 <br><br>
 
