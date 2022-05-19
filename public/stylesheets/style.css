@@ -92,7 +92,6 @@ input[type=submit]:hover {
 }
 
 
-
 td {
     display: table-cell;
     padding:0; margin:0;
@@ -122,5 +121,5 @@ button:hover{
 }
 
 .tableRowsDnevnik:hover {
-    background-color: coral;
+    background-color:#00afc3;
 }

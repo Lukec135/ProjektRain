@@ -51,14 +51,14 @@ module.exports = {
                 //err.status = 401;
                 //return next(err);
                 return res.json({
-                    loginStatus: 'false'
+                    message: 'false'
                 });
             } else {
                 //req.session.userId = user._id;
                 //req.session.userName = user.username;
                 //res.render('index', {title: 'Pametni paketnik'});
                 return res.json({
-                    loginStatus: 'true'
+                    message: 'true'
                 });
             }
         });

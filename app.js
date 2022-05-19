@@ -112,13 +112,13 @@ app.use(function (err, req, res, next) {
 });
 
 
-
+/*
 app.post('/paketnik/odstraniOseboZDostopom', function(req, res) {
 
     console.log(JSON.stringify(req.body));
     res.send(req.body.self);
 });
-
+*/
 
 
 

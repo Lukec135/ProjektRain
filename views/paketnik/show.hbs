@@ -5,13 +5,16 @@
 
 <button type="button"><a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a></button>
 
+<form action="/paketnik/spremeniPolnPrazen" method="post">
 <p>Poln:
 {{#if paketnik.poln}}
-    <span>da</span>
+    <span>Da </span><img alt="da" style="width: 10px;height: 10px;" src="/images/yes.png"><input type="hidden" name="paketnikId" value="{{paketnik._id}}"><input type="submit" style="margin-left: 10px" value="Spremeni">
 {{else}}
-    <spa>ne</spa>
+    <span>Ne </span><img alt="ne" style="width: 10px;height: 10px;" src="/images/no.png"><input type="hidden" name="paketnikId" value="{{paketnik._id}}"><input type="submit" style="margin-left: 10px" value="Spremeni">
 {{/if}}
+
 </p>
+</form>
 
 <button type="button"><a href="/paketnik/odklep/{{paketnik._id}}">Odkleni</a></button>
 
@@ -47,19 +50,15 @@
     {{/each}}
 </table>
 
-
-
-
 <br><br>
 
 <h2>Dnevnik odklepov:</h2>
-<!-- v show se mora narediti tabela namesto navadnega izpisa dnevnika -->
 
 
 <table style="width:100%" class="DnevnikOdklepov">
     <tr>
         <th class="rowsDnevnik">Odprl</th>
-        <th class="rowsDnevnik">datum in čas</th>
+        <th class="rowsDnevnik">Datum in čas</th>
     </tr>
 {{#each paketnik.odklepi}}
     <tr class="tableRowsDnevnik">

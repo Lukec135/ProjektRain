@@ -75,14 +75,14 @@ module.exports = {
         PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
             if (err) {
                 return res.json({
-                    odklepStatus: 'false',
+                    message: 'false',
                     info: 'error when getting paketnik'
                 });
             }
 
             if (!paketnik) {
                 return res.json({
-                    odklepStatus: 'false',
+                    message: 'false',
                     info: 'no such paketnik'
                 });
             }
@@ -90,14 +90,14 @@ module.exports = {
             UserModel.findOne({username: odklenilUsername}, function (err, user) {
                 if (err) {
                     return res.json({
-                        odklepStatus: 'false',
+                        message: 'false',
                         info: 'error when getting user'
                     });
                 }
 
                 if (!user) {
                     return res.json({
-                        odklepStatus: 'false',
+                        message: 'false',
                         info: 'no such user'
                     });
                 }
@@ -126,7 +126,7 @@ module.exports = {
                     paketnik.save(function (err, paketnik) {
                         if (err) {
                             return res.status(500).json({
-                                odklepStatus: 'false',
+                                message: 'false',
                                 info: 'error when updating paketnik'
                             });
                         }
@@ -136,14 +136,14 @@ module.exports = {
 
                         // return res.render('paketnik/odklenjen', data);
                         return res.json({
-                            odklepStatus: 'true',
+                            message: 'true',
                             info: 'odklenjen'
                         });
                     });
                 } else {
                     //return res.render('paketnik/neavtoriziran');
                     return res.json({
-                        odklepStatus: 'false',
+                        message: 'false',
                         info: 'neavtoriziran'
                     });
                 }
@@ -279,12 +279,13 @@ module.exports = {
     },
 
     listAPI: function (req, res) {
-        //let query = {lastnikId: req.session.userId}; //req.body.lastnikId
-        PaketnikModel.find({lastnikId: '62856c57e4ee4f7e7030da14'}, function (err, paketniki) {
+        //let query = {lastnikId: req.session.userId}; //req.body.lastnikId        PaketnikModel.find({lastnikId: '62856c57e4ee4f7e7030da14'}, function (err, paketniki) {
+        let id = req.body.lastnikId
+        PaketnikModel.find({lastnikId: id}, function (err, paketniki) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting paketnik.',
-                    error: err
+                    info: err
                 });
             }
             //let data = [];
@@ -294,7 +295,7 @@ module.exports = {
             return res.json({
                 list: JSON.stringify(Object.assign({}, paketniki))
             });
-        });
+        }).lean();
     },
 
     /**
@@ -324,6 +325,71 @@ module.exports = {
             //return res.json(paketnik);
             return res.render('paketnik/show', data);
         }).lean();
+    },
+
+    spremeniPolnPrazen: function (req, res) {
+        let id = req.body.paketnikId;
+
+        PaketnikModel.findOne({_id: id}, function (err, paketnik) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik.',
+                    error: err
+                });
+            }
+            if (!paketnik) {
+                return res.status(404).json({
+                    message: 'No such paketnik'
+                });
+            }
+
+            paketnik.poln = !paketnik.poln;
+
+            paketnik.save(function (err, paketnik) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating paketnik.',
+                        error: err
+                    });
+                }
+
+                return res.redirect('back');
+            });
+        });
+    },
+
+    spremeniPolnPrazenAPI: function (req, res) {
+        let id = req.body.paketnikId;
+
+        PaketnikModel.findOne({_id: id}, function (err, paketnik) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik.',
+                    info: err
+                });
+            }
+            if (!paketnik) {
+                return res.status(404).json({
+                    message: 'No such paketnik'
+                });
+            }
+
+            paketnik.poln = !paketnik.poln;
+
+            paketnik.save(function (err, paketnik) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating paketnik.',
+                        info: err
+                    });
+                }
+
+                return res.json({
+                    message: 'true',
+                    info: 'spremenjeno'
+                });
+            });
+        });
     },
 
     /**
