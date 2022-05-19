@@ -2,7 +2,8 @@
 
 <p>ID: {{paketnik._id}}</p>
 
-<a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a>
+
+<button type="button"><a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a></button>
 
 <p>Poln:
 {{#if paketnik.poln}}
@@ -12,7 +13,7 @@
 {{/if}}
 </p>
 
-<a href="/paketnik/odklep/{{paketnik._id}}">Odkleni</a>
+<button type="button"><a href="/paketnik/odklep/{{paketnik._id}}">Odkleni</a></button>
 
 <br><br>
 
@@ -55,9 +56,19 @@
 <!-- v show se mora narediti tabela namesto navadnega izpisa dnevnika -->
 
 
-
+<table style="width:100%" class="DnevnikOdklepov">
+    <tr>
+        <th class="rowsDnevnik">Odprl</th>
+        <th class="rowsDnevnik">datum in čas</th>
+    </tr>
 {{#each paketnik.odklepi}}
-    <span><i>{{this.[oseba]}} — {{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></span> <br><br>
+    <tr class="tableRowsDnevnik">
+        <td class="rowsDnevnik">{{this.[oseba]}}</td>
+        <td class="rowsDnevnik"><i>{{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></td>
+    </tr>
 {{/each}}
+
+</table>
+
 
 
