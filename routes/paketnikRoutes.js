@@ -18,13 +18,17 @@ function requiresLogin(req, res, next) {
  */
 router.get('/', requiresLogin, paketnikController.list);
 router.get('/dodaj', requiresLogin, paketnikController.dodaj);
-router.get('/list', requiresLogin, paketnikController.list);
+
+router.get('/list', requiresLogin, paketnikController.list); //<------
+router.get('/listAPI', requiresLogin, paketnikController.listAPI); //<------
 
 /*
  * GET
  */
-router.get('/:id', paketnikController.show);
-router.get('/odklep/:id', requiresLogin, paketnikController.odklep);
+router.get('/:id', paketnikController.show)
+
+router.get('/odklep/:id', requiresLogin, paketnikController.odklep); //<------
+
 router.get('/odstrani/:id', paketnikController.remove);
 
 
@@ -34,6 +38,8 @@ router.get('/odstrani/:id', paketnikController.remove);
 router.post('/', paketnikController.create);
 router.post('/dodajOseboZDostopom', paketnikController.dodajOseboZDostopom);
 router.post('/odstraniOseboZDostopom', paketnikController.odstraniOseboZDostopom);
+
+router.post('/odklepAPI', requiresLogin, paketnikController.odklepAPI); //<------
 
 /*
  * PUT

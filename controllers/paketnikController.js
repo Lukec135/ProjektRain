@@ -32,7 +32,7 @@ module.exports = {
             let found = false;
             for (let key in paketnik.osebeZDostopom) {
                 if (paketnik.osebeZDostopom.hasOwnProperty(key)) {
-                    if (paketnik.osebeZDostopom[key].osebaId == req.session.userId)
+                    if (paketnik.osebeZDostopom[key].osebaId == req.session.userId) //==
                     {
                         found = true;
                         break;
@@ -64,11 +64,90 @@ module.exports = {
             else {
                 return res.render('paketnik/neavtoriziran');
             }
+        });
+    },
 
+    odklepAPI: function (req, res) {
+        let paketnikId = req.body.paketnikId; //POST <------
+        let odklenilId; //= req.session.userId
+        let odklenilUsername = req.body.username; //POST <------
 
-            //push notifications za več točk
+        PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
+            if (err) {
+                return res.json({
+                    odklepStatus: 'false',
+                    info: 'error when getting paketnik'
+                });
+            }
 
+            if (!paketnik) {
+                return res.json({
+                    odklepStatus: 'false',
+                    info: 'no such paketnik'
+                });
+            }
 
+            UserModel.findOne({username: odklenilUsername}, function (err, user) {
+                if (err) {
+                    return res.json({
+                        odklepStatus: 'false',
+                        info: 'error when getting user'
+                    });
+                }
+
+                if (!user) {
+                    return res.json({
+                        odklepStatus: 'false',
+                        info: 'no such user'
+                    });
+                }
+
+                odklenilId = user._id; // <------
+
+                //ali ima uporabnik pravico za odklep
+                let found = false;
+                for (let key in paketnik.osebeZDostopom) {
+                    if (paketnik.osebeZDostopom.hasOwnProperty(key)) {
+                        if (paketnik.osebeZDostopom[key].osebaId == odklenilId) //==
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found) {
+                    paketnik.odklepi.push(
+                        {
+                            'datum': Date.now(),
+                            'oseba': odklenilUsername
+                        }
+                    )
+                    paketnik.save(function (err, paketnik) {
+                        if (err) {
+                            return res.status(500).json({
+                                odklepStatus: 'false',
+                                info: 'error when updating paketnik'
+                            });
+                        }
+
+                        let data = [];
+                        data.paketnik = paketnik;
+
+                        // return res.render('paketnik/odklenjen', data);
+                        return res.json({
+                            odklepStatus: 'true',
+                            info: 'odklenjen'
+                        });
+                    });
+                } else {
+                    //return res.render('paketnik/neavtoriziran');
+                    return res.json({
+                        odklepStatus: 'false',
+                        info: 'neavtoriziran'
+                    });
+                }
+            });
         });
     },
 
@@ -108,7 +187,7 @@ module.exports = {
                 let found = false;
                 for (let key in paketnik.osebeZDostopom) {
                     if (paketnik.osebeZDostopom.hasOwnProperty(key)) {
-                        if (paketnik.osebeZDostopom[key].osebaId == user._id)
+                        if (paketnik.osebeZDostopom[key].osebaId == user._id) //==
                         {
                             found = true;
                             break;
@@ -173,8 +252,6 @@ module.exports = {
 
                 return res.redirect('back');
             });
-
-
         });
     },
 
@@ -199,6 +276,25 @@ module.exports = {
 
             return res.render('paketnik/list', data);
         }).lean();
+    },
+
+    listAPI: function (req, res) {
+        //let query = {lastnikId: req.session.userId}; //req.body.lastnikId
+        PaketnikModel.find({lastnikId: '62856c57e4ee4f7e7030da14'}, function (err, paketniki) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting paketnik.',
+                    error: err
+                });
+            }
+            //let data = [];
+            //data = paketniki;
+
+            //return res.render('paketnik/list', data);
+            return res.json({
+                list: JSON.stringify(Object.assign({}, paketniki))
+            });
+        });
     },
 
     /**

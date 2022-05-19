@@ -20,7 +20,9 @@ router.get('/:id', userController.show);
  * POST
  */
 router.post('/', userController.create);
-router.post('/login', userController.login);
+
+router.post('/login', userController.login); //<------
+router.post('/loginAPI', userController.loginAPI); //<------
 
 /*
  * PUT

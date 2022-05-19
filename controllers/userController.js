@@ -44,6 +44,26 @@ module.exports = {
         });
     },
 
+    loginAPI: function (req, res) {
+        userModel.authenticate(req.body.username, req.body.password, function (error, user) {
+            if (error || !user) {
+                //var err = new Error("Wrong username or password");
+                //err.status = 401;
+                //return next(err);
+                return res.json({
+                    loginStatus: 'false'
+                });
+            } else {
+                //req.session.userId = user._id;
+                //req.session.userName = user.username;
+                //res.render('index', {title: 'Pametni paketnik'});
+                return res.json({
+                    loginStatus: 'true'
+                });
+            }
+        });
+    },
+
     profile: function (req, res, next) {
         userModel.findById(req.session.userId)
             .exec(function (error, user) {
