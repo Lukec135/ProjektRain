@@ -46,21 +46,37 @@ module.exports = {
 
     loginAPI: function (req, res) {
         userModel.authenticate(req.body.username, req.body.password, function (error, user) {
-            if (error || !user) {
-                //var err = new Error("Wrong username or password");
-                //err.status = 401;
-                //return next(err);
-                return res.json({
-                    message: 'false'
-                });
-            } else {
-                //req.session.userId = user._id;
-                //req.session.userName = user.username;
-                //res.render('index', {title: 'Pametni paketnik'});
-                return res.json({
-                    message: 'true'
-                });
-            }
+            userModel.findOne({username: req.body.username}, function (err, userFind) {
+
+                if (error || !user) {
+                    //var err = new Error("Wrong username or password");
+                    //err.status = 401;
+                    //return next(err);
+                    return res.json({
+                        message: 'false'
+                    });
+                }
+                else {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'false',
+                        });
+                    }
+                    if (!userFind) {
+                        return res.status(404).json({
+                            message: 'false'
+                        });
+                    }
+                    //req.session.userId = user._id;
+                    //req.session.userName = user.username;
+                    //res.render('index', {title: 'Pametni paketnik'});
+                    let userId = userFind._id
+                    return res.json({
+                        message: 'true',
+                        userId: userId.toString()
+                    });
+                }
+            });
         });
     },
 
