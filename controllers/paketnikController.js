@@ -69,8 +69,8 @@ module.exports = {
 
     odklepAPI: function (req, res) {
         let paketnikId = req.body.paketnikId; //POST <------
-        let odklenilId; //= req.session.userId
-        let odklenilUsername = req.body.username; //POST <------
+        let odklenilId; req.body._id
+        //let odklenilUsername = req.body.username; //POST <------
 
         PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
             if (err) {
@@ -87,7 +87,7 @@ module.exports = {
                 });
             }
 
-            UserModel.findOne({username: odklenilUsername}, function (err, user) {
+            UserModel.findOne({_id: odklenilId}, function (err, user) {
                 if (err) {
                     return res.json({
                         message: 'false',
@@ -102,8 +102,6 @@ module.exports = {
                     });
                 }
 
-                odklenilId = user._id; // <------
-
                 //ali ima uporabnik pravico za odklep
                 let found = false;
                 for (let key in paketnik.osebeZDostopom) {
@@ -116,11 +114,13 @@ module.exports = {
                     }
                 }
 
+                let odklenilUsername = user.username;
+
                 if (found) {
                     paketnik.odklepi.push(
                         {
                             'datum': Date.now(),
-                            'oseba': odklenilUsername
+                            'oseba': odklenilUsername.toString()
                         }
                     )
                     paketnik.save(function (err, paketnik) {
