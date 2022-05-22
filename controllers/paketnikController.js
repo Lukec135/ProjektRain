@@ -1,6 +1,6 @@
 var PaketnikModel = require('../models/paketnikModel.js');
 var UserModel = require('../models/userModel.js');
-const e = require("express");
+ObjectId = require('mongodb').ObjectID;
 
 /**
  * paketnikController.js
@@ -263,8 +263,9 @@ module.exports = {
      * paketnikController.list()
      */
     list: function (req, res) {
-        let query = {lastnikId: req.session.userId};
-        PaketnikModel.find(query, function (err, paketniki) {
+        let id = req.session.userId;
+        //let osebaId = req.session.userId;
+        PaketnikModel.find({lastnikId: id}, function (err, paketniki) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting paketnik.',
@@ -274,13 +275,15 @@ module.exports = {
             let data = [];
             data.paketniki = paketniki;
 
+
+
             return res.render('paketnik/list', data);
         }).lean();
     },
 
     listAPI: function (req, res) {
-        //let query = {lastnikId: req.session.userId}; //req.body.lastnikId        PaketnikModel.find({lastnikId: '62856c57e4ee4f7e7030da14'}, function (err, paketniki) {
-        let id = req.body.lastnikId
+        // PaketnikModel.find({lastnikId: '62856c57e4ee4f7e7030da14'}, function (err, paketniki) {
+        let id = req.body.lastnikId;
         PaketnikModel.find({lastnikId: id}, function (err, paketniki) {
             if (err) {
                 return res.status(500).json({
@@ -396,7 +399,11 @@ module.exports = {
      * paketnikController.create()
      */
     create: function (req, res) {
+        let _idPaketnik = req.body._idPaketnik;
+        let ID = _idPaketnik.padStart(24, '0');
+
         let paketnik = new PaketnikModel({
+            _id: ObjectId(ID),
             naziv: req.body.naziv,
             lastnikId: req.session.userId,
 

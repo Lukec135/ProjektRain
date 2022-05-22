@@ -3,7 +3,7 @@
 <p>ID: {{paketnik._id}}</p>
 
 
-<button type="button"><a href="/paketnik/odstrani/{{paketnik._id}}">Odstrani paketnik</a></button>
+<button type="button"><a href="/paketnik/odstrani/{{paketnik._id}}">Izbriši</a></button>
 
 <form action="/paketnik/spremeniPolnPrazen" method="post">
 <p>Poln:
@@ -22,7 +22,7 @@
 
 <h2>Osebe z dostopom:</h2>
 <form action="/paketnik/dodajOseboZDostopom" method="post">
-    <p>Dodaj dostop osebi: <input type="text" name="username" placeholder="Uporabniško ime" required>
+    <p>Dodaj dostop osebi: <input type="text" name="username" style="height: 23px;" placeholder="Uporabniško ime" required>
     <input type="hidden" name="paketnikId" value="{{paketnik._id}}">
     <input type="submit" style="margin-left: 10px" value="Dodaj"></p>
 </form>
@@ -63,7 +63,7 @@
 {{#each paketnik.odklepi}}
     <tr class="tableRowsDnevnik">
         <td class="rowsDnevnik">{{this.[oseba]}}</td>
-        <td class="rowsDnevnik"><i>{{dateformat  this.[datum] "dddd, mmmm dd yyyy, HH:MM"}}</i></td>
+        <td class="rowsDnevnik"><i>{{dateformat  this.[datum] "dddd, dd mmmm yyyy, HH:MM"}}</i></td>
     </tr>
 {{/each}}
 
