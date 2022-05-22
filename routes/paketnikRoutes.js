@@ -20,8 +20,6 @@ router.get('/', requiresLogin, paketnikController.list);
 router.get('/dodaj', requiresLogin, paketnikController.dodaj);
 
 router.get('/list', requiresLogin, paketnikController.list);
-router.get('/listAPI', paketnikController.listAPI); //<------
-
 /*
  * GET
  */
@@ -39,6 +37,8 @@ router.get('/odstrani/:id', paketnikController.remove);
 router.post('/', paketnikController.create);
 router.post('/dodajOseboZDostopom', paketnikController.dodajOseboZDostopom);
 router.post('/odstraniOseboZDostopom', paketnikController.odstraniOseboZDostopom);
+
+router.post('/listAPI', paketnikController.listAPI); //<------
 
 router.post('/odklepAPI', paketnikController.odklepAPI); //<------
 

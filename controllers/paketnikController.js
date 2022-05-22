@@ -69,7 +69,7 @@ module.exports = {
 
     odklepAPI: function (req, res) {
         let paketnikId = req.body.paketnikId; //POST <------
-        let odklenilId; req.body._id
+        let odklenilId = req.body._id;
         //let odklenilUsername = req.body.username; //POST <------
 
         PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
@@ -223,8 +223,8 @@ module.exports = {
     },
 
     odstraniOseboZDostopom: function (req, res) {
-        let paketnikId = req.body.paketnikId
-        let osebaIndex = req.body.osebaIndex
+        let paketnikId = req.body.paketnikId;
+        let osebaIndex = req.body.osebaIndex;
 
 
         PaketnikModel.findOne({_id: paketnikId}, function (err, paketnik) {
@@ -386,7 +386,7 @@ module.exports = {
 
                 return res.json({
                     message: 'true',
-                    info: 'spremenjeno'
+                    info: 'spremenjeno na: ' + paketnik.poln
                 });
             });
         });
