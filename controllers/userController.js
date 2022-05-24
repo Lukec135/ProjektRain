@@ -165,9 +165,11 @@ module.exports = {
                     res.render('user/login')
                 });
             } else {
-                return res.status(500).json({
-                    message: 'Uporabniško ime ze obstaja.',
-                });
+                let error = "Uporabniško ime že obstaja."
+                const data = {
+                    message: error
+                };
+                return res.render('user/register', data);
             }
         });
 

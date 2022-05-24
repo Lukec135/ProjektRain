@@ -98,15 +98,14 @@ td {
 }
 
 
-button {
+.button {
     background-color: dimgray;
     color: white;
     border: none;
-    width: 100px;
-    height: 25px;
+    padding: 5px 20px 5px 20px;
 }
 
-button:hover{
+.button:hover{
     background-color: #111111;
 }
 

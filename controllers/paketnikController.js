@@ -1,5 +1,9 @@
 var PaketnikModel = require('../models/paketnikModel.js');
 var UserModel = require('../models/userModel.js');
+//const {Schema} = require("mongoose");
+const mongoose = require("mongoose");
+let Schema = mongoose.Schema;
+
 ObjectId = require('mongodb').ObjectID;
 
 /**
@@ -276,8 +280,44 @@ module.exports = {
             data.paketniki = paketniki;
 
 
+            PaketnikModel.find(function (err, paketnikiVsi) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting paketnik.',
+                        error: err
+                    });
+                }
 
-            return res.render('paketnik/list', data);
+                let data2 = [];
+
+                for (let i=0; i < paketnikiVsi.length; i++) {
+                    for (let j = 0; j < paketnikiVsi[i].osebeZDostopom.length; j++) {
+                        let paketnikNew = new Schema({
+                            _id: String,
+                            naziv: String,
+                            lastnikId: String,
+                            poln: Boolean,
+                            username: String
+                        });
+                        if (paketnikiVsi[i].osebeZDostopom[j].osebaId == id && paketnikiVsi[i].lastnikId != id) {
+                            let new_id = paketnikiVsi[i]._id.toString()
+                            new_id = new_id.replace(/^0+/, '')
+                            paketnikNew._id = new_id
+                            paketnikNew.naziv = paketnikiVsi[i].naziv
+                            paketnikNew.lastnikId = paketnikiVsi[i].lastnikId
+                            paketnikNew.poln = paketnikiVsi[i].poln
+                            paketnikNew.username = paketnikiVsi[i].osebeZDostopom[0].osebaUsername
+
+                            data2.push(paketnikNew)
+                        }
+                    }
+                }
+                data.paketnikiVsi = data2;
+
+
+                return res.render('paketnik/list', data);
+            }).lean();
+            //return res.render('paketnik/list', data);
         }).lean();
     },
 
@@ -295,9 +335,10 @@ module.exports = {
             //data = paketniki;
 
             //return res.render('paketnik/list', data);
-            return res.json({
-                list: JSON.stringify(Object.assign({}, paketniki))
-            });
+            return res.json(
+                //list: JSON.stringify(Object.assign({}, paketniki))
+                JSON.stringify(paketniki)
+            );
         }).lean();
     },
 
@@ -399,34 +440,53 @@ module.exports = {
      * paketnikController.create()
      */
     create: function (req, res) {
+        let naziv = req.body.naziv;
         let _idPaketnik = req.body._idPaketnik;
+
         let ID = _idPaketnik.padStart(24, '0');
 
-        let paketnik = new PaketnikModel({
-            _id: ObjectId(ID),
-            naziv: req.body.naziv,
-            lastnikId: req.session.userId,
-
-            osebeZDostopom: (
-                {
-                    'osebaId': req.session.userId,
-                    'osebaUsername': req.session.userName
-                }
-            ),
-
-            poln: false
-        });
-
-        paketnik.save(function (err, paketnik) {
+        PaketnikModel.findOne({_id: ID}, function (err, paketnikExists) {
             if (err) {
                 return res.status(500).json({
-                    message: 'Error when creating paketnik',
-                    error: err
+                    message: 'Error when getting paketnik.',
+                    info: err
                 });
             }
+            if (!paketnikExists) {
+                let paketnik = new PaketnikModel({
+                    _id: ObjectId(ID),
+                    naziv: naziv,
+                    lastnikId: req.session.userId,
 
-            //return res.status(201).json(paketnik);
-            return res.redirect('/paketnik/list');
+                    osebeZDostopom: (
+                        {
+                            'osebaId': req.session.userId,
+                            'osebaUsername': req.session.userName
+                        }
+                    ),
+
+                    poln: false
+                });
+
+                paketnik.save(function (err, paketnik) {
+                    if (err) {
+                        return res.status(500).json({
+                            message: 'Error when creating paketnik',
+                            error: err
+                        });
+                    }
+
+                    //return res.status(201).json(paketnik);
+                    return res.redirect('/paketnik/list');
+                });
+            }
+            else {
+                let error = "ID paketnika že obstaja."
+                const data = {
+                    message: error
+                };
+                return res.render('paketnik/dodaj', data);
+            }
         });
     },
 

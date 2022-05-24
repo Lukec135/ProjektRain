@@ -1,7 +1,11 @@
 <h1>Dodaj paketnik</h1>
 <form action="/paketnik" method="post">
     <label>Naziv paketnika: <input type="text" name="naziv" required></label><br><br>
-    <label>ID paketnika: <input type="text" name="_idPaketnik" required></label><br><br><br><br>
+    <label>ID paketnika: <input style="margin-left: 21px" type="text" name="_idPaketnik" required></label><br><br>
+
+    <p>{{message}}</p>
+
+    <br><br>
 
     <input type="hidden" name="lastnikId" value="{{req.session.userId}}">
 
