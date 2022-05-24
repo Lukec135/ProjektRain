@@ -59,8 +59,10 @@ module.exports = {
                         });
                     }
 
-                    let data = [];
-                    data.paketnik = paketnik;
+                    let odklenjen = paketnik.naziv
+                    const data = {
+                        message: odklenjen
+                    };
 
                     return res.render('paketnik/odklenjen', data);
                 });
