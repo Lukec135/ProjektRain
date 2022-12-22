@@ -10,6 +10,7 @@ var bodyParser = require('body-parser');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/userRoutes');
 var paketnikiRouter = require('./routes/paketnikRoutes');
+var deliveryRouter = require('./routes/deliveryRoutes');
 var imagesRouter = require('./routes/imageRoutes');
 //------------------------------------//
 
@@ -62,6 +63,10 @@ hbs.registerHelper('select', function(selected, options) {
     return options.fn(this).replace(
         new RegExp(' value=\"' + selected + '\"'),
         '$& selected="selected"');
+});
+
+hbs.registerHelper('arraySize', function (data) {
+    return data.length;
 });
 
 ///////////////////
@@ -121,6 +126,7 @@ app.use(express.static('images'));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/paketnik', paketnikiRouter);
+app.use('/deliveries', deliveryRouter);
 app.use('/images', imagesRouter);
 //------------------------------------//
 

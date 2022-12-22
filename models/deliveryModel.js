@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var deliverySchema = new Schema({
-	'userId' : String,
+	'username' : String,
 	'hour' : String,
 	'day' : String,
 	'weather' : String,

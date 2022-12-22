@@ -1,5 +1,7 @@
 var userModel = require('../models/userModel.js');
-const PaketnikModel = require("../models/paketnikModel");
+const paketnikModel = require("../models/paketnikModel");
+const deliveryModel = require("../models/deliveryModel");
+const DeliveryModel = require("../models/deliveryModel");
 
 /**
  * userController.js
@@ -118,41 +120,52 @@ module.exports = {
             let data = [];
             data.user = user;
 
+            deliveryModel.find({username: user.username}, function (err, deliveries) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting user.',
+                        error: err
+                    });
+                }
+                let data2 = [];
 
-            return res.render('user/userData', data);
+                for (let i = 0; i < deliveries.length; i++) {
+                    data2.push(deliveries[i]);
+                }
+                data.deliveries = data2;
 
+                data.mailman = !!req.session.mailman;
+
+                return res.render('user/userData', data);
+            }).lean();
         }).lean();
     },
 
-    addData: function (req, res) {
-        let time = req.body.time;
+
+
+    addToArffAPI: function (req, res) {
+        let username = req.body.username;
+        let deliveryId = req.body.deliveryId;
+        let hour = req.body.hour;
         let day = req.body.day;
         let weather = req.body.weather;
         let holiday = req.body.holiday;
         let signed = req.body.signed;
         let rating = req.body.rating;
 
-        let id = req.body.dataUserId;
-
-        userModel.findOne({_id: id}, function (err, user) {
+        userModel.findOne({username: username}, function (err, user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting user.',
                     error: err
                 });
             }
-            let newData = time + "," + day + "," + weather + "," + holiday + "," + signed + "," + rating;
+            let newData = hour + "," + day + "," + weather + "," + holiday + "," + signed + "," + rating;
             let newArff = user.arff;
             newArff = newData + "\n" + newArff;
 
             user.arff = newArff;
 
-            /*
-            return res.json({
-                message: newData
-            });*/
-            let data = [];
-            data.user = user;
 
             user.save(function (err, user) {
                 if (err) {
@@ -161,15 +174,22 @@ module.exports = {
                         error: err
                     });
                 }
+            });
 
-                res.redirect('back');
+            DeliveryModel.findByIdAndRemove(deliveryId, function (err, delivery) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when deleting the delivery.',
+                        error: err
+                    });
+                }
+
+                return res.json({
+                    message: 'success'
+                });
             });
 
         })
-    },
-
-    askUser: function (req, res) {
-        res.redirect('back');
     },
 
     showLogin: function (req, res) {

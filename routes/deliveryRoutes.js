@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var deliveryController = require('../controllers/deliveryController.js');
+const paketnikController = require("../controllers/paketnikController");
 
 /*
  * GET
@@ -15,7 +16,8 @@ router.get('/:id', deliveryController.show);
 /*
  * POST
  */
-router.post('/', deliveryController.create);
+router.post('/create', deliveryController.create);
+router.post('/deliveryListAPI', deliveryController.deliveryListAPI);
 
 /*
  * PUT

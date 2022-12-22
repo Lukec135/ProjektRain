@@ -43,8 +43,10 @@ router.post('/loginAPI', userController.loginAPI); //<------
 
 router.post('/userAPI', userController.userAPI); //<------
 
-router.post('/addData', userController.addData)
-router.post('/askUser', userController.askUser)
+//router.post('/addData', userController.addDelivery)
+router.post('/addToArffAPI', userController.addToArffAPI)
+
+//router.post('/askUser', userController.askUser)
 
 /*
  * PUT

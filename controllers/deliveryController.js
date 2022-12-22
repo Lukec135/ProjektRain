@@ -1,10 +1,10 @@
 var DeliveryModel = require('../models/deliveryModel.js');
-var UserModel = require('../models/userModel.js');
+const userModel = require("../models/userModel");
 
 /**
  * deliveryController.js
  *
- * @description :: Server-side logic for managing deliverys.
+ * @description :: Server-side logic for managing deliveries.
  */
 module.exports = {
 
@@ -12,7 +12,7 @@ module.exports = {
      * deliveryController.list()
      */
     list: function (req, res) {
-        DeliveryModel.find(function (err, deliverys) {
+        DeliveryModel.find(function (err, deliveries) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting delivery.',
@@ -20,7 +20,34 @@ module.exports = {
                 });
             }
 
-            return res.json(deliverys);
+            return res.json(deliveries);
+        });
+    },
+
+    deliveryListAPI: function (req, res) {
+        let username = req.body.username;
+        DeliveryModel.find({username: username}, function (err, deliveries) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting delivery.',
+                    error: err
+                });
+            }
+            let result = [];
+            for (let i = 0; i < deliveries.length; i++) {
+                result.push({
+                    username: deliveries[i].username,
+                    deliveryId: deliveries[i]._id,
+                    hour: deliveries[i].hour,
+                    day: deliveries[i].day,
+                    weather: deliveries[i].weather,
+                    holiday: deliveries[i].holiday,
+                    signed: deliveries[i].signed,
+                    rating: deliveries[i].rating
+                });
+            }
+            res.contentType('application/json');
+            return res.json(result);
         });
     },
 
@@ -28,7 +55,7 @@ module.exports = {
      * deliveryController.show()
      */
     show: function (req, res) {
-        var id = req.params.id;
+        var id = req.body.id;
 
         DeliveryModel.findOne({_id: id}, function (err, delivery) {
             if (err) {
@@ -53,13 +80,13 @@ module.exports = {
      */
     create: function (req, res) {
         var delivery = new DeliveryModel({
-			userId : req.body.userId,
+			username : req.body.username,
 			hour : req.body.hour,
 			day : req.body.day,
 			weather : req.body.weather,
 			holiday : req.body.holiday,
 			signed : req.body.signed,
-			rating : req.body.rating
+            rating : "None"
         });
 
         delivery.save(function (err, delivery) {
@@ -70,7 +97,7 @@ module.exports = {
                 });
             }
 
-            return res.status(201).json(delivery);
+            res.redirect('back');
         });
     },
 
@@ -94,7 +121,7 @@ module.exports = {
                 });
             }
 
-            delivery.userId = req.body.userId ? req.body.userId : delivery.userId;
+            delivery.username = req.body.username ? req.body.username : delivery.username;
 			delivery.hour = req.body.hour ? req.body.hour : delivery.hour;
 			delivery.day = req.body.day ? req.body.day : delivery.day;
 			delivery.weather = req.body.weather ? req.body.weather : delivery.weather;

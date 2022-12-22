@@ -4,81 +4,95 @@
 <p style="font-size: 17px">{{user.address}}, {{user.city}} {{user.zip}}</p>
 <br>
 
-<form action="/users/askUser" method="post">
-    <input type="hidden" name="dataUserId" value="{{user._id}}">
-    <input type="submit" value="Vprašaj uporabnika" style="width: auto">
-</form>
-<p>Odgovor: </p>
-<br><br>
+{{#if mailman}}
 
-<form action="/users/addData" method="post">
-    <div>
-        Ura:
-        <select name="time" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-                <option value="12">12</option>
-                <option value="13">13</option>
-                <option value="14">14</option>
-                <option value="15">15</option>
-                <option value="16">16</option>
-                <option value="17">17</option>
-                <option value="18">18</option>
-                <option value="19">19</option>
-            {{/select}}
-        </select>
-        Dan:
-        <select name="day" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="pon">Ponedeljek</option>
-                <option value="tor">Torek</option>
-                <option value="sre">Sreda</option>
-                <option value="cet">Četrtek</option>
-                <option value="pet">Petek</option>
-            {{/select}}
-        </select>
-        Vreme:
-        <select name="weather" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="sonce">Sončno</option>
-                <option value="oblacno">Oblačno</option>
-                <option value="dez">Dež</option>
-                <option value="nevihta">Nevihta</option>
-                <option value="sneg">Sneg</option>
-            {{/select}}
-        </select>
-        Praznik
-        <select name="holiday" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="ne">Ne</option>
-                <option value="da">Da</option>
-            {{/select}}
-        </select>
-        Povzem
-        <select name="signed" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="ne">Ne</option>
-                <option value="da">Da</option>
-            {{/select}}
-        </select>
-        Ocena
-        <select name="rating" style="margin-right: 40px">
-            {{#select CurrentSort}}
-                <option value="paketnik">Paketnik</option>
-                <option value="roke">Roke</option>
-                <option value="posta">Pošta</option>
-            {{/select}}
-        </select>
+    <p>Obvesti uporabnika za dostavo: </p>
 
-        <input type="hidden" name="dataUserId" value="{{user._id}}">
+    <form action="/deliveries/create" method="post">
+        <div>
+            Ura:
+            <select name="hour" style="margin-right: 40px">
+                {{#select CurrentSort}}
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                {{/select}}
+            </select>
+            Dan:
+            <select name="day" style="margin-right: 40px">
+                {{#select CurrentSort}}
+                    <option value="pon">Ponedeljek</option>
+                    <option value="tor">Torek</option>
+                    <option value="sre">Sreda</option>
+                    <option value="cet">Četrtek</option>
+                    <option value="pet">Petek</option>
+                {{/select}}
+            </select>
+            Vreme:
+            <select name="weather" style="margin-right: 40px">
+                {{#select CurrentSort}}
+                    <option value="sonce">Sončno</option>
+                    <option value="oblacno">Oblačno</option>
+                    <option value="dez">Dež</option>
+                    <option value="nevihta">Nevihta</option>
+                    <option value="sneg">Sneg</option>
+                {{/select}}
+            </select>
+            Praznik
+            <select name="holiday" style="margin-right: 40px">
+                {{#select CurrentSort}}
+                    <option value="ne">Ne</option>
+                    <option value="da">Da</option>
+                {{/select}}
+            </select>
+            Povzem
+            <select name="signed" style="margin-right: 40px">
+                {{#select CurrentSort}}
+                    <option value="ne">Ne</option>
+                    <option value="da">Da</option>
+                {{/select}}
+            </select>
+            <!--
+            Ocena
+            <select name="rating" style="margin-right: 40px">
 
-        <input type="submit" value="Dodaj">
-    </div>
-</form>
+                    <option value="paketnik">Paketnik</option>
+                    <option value="roke">Roke</option>
+                    <option value="posta">Pošta</option>
+
+            </select>
+            -->
+            <input type="hidden" name="username" value="{{user.username}}">
+
+            <input type="submit" value="Pošlji">
+        </div>
+    </form>
+
+    <br>
+    {{#if deliveries}}
+    <p>Trenutne poslane zahteve za uporabnika:</p>
+
+    <ol>
+    {{#each deliveries}}
+        <li><span style="margin-right: 20px"> Ura: {{this.hour}}</span><span style="margin-right: 20px">Dan: {{this.day}}</span><span style="margin-right: 20px">Povzem: {{this.signed}}</span></li>
+    {{/each}}
+    </ol>
+    {{/if}}
+
+{{/if}}
+
+
+<br><br><br>
 
 <pre style="font-size: 17px">{{tab "Ura,Dan,Vreme,Praznik,Povzem,Ocena"}}</pre>
 
