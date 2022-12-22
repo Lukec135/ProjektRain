@@ -123,3 +123,11 @@ td {
 .tableRowsDnevnik:hover {
     background-color:#00afc3;
 }
+
+#containerIntro p {
+    display: inline;
+    vertical-align: top;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+}

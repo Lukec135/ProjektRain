@@ -1,8 +1,18 @@
 <h1>Profil uporabnika</h1>
 
+{{#if mailman}}
+    <p style="margin-bottom: 40px">Vrsta uporabnika: Poštar</p>
+{{/if}}
+
 <p>ID: {{_id}}</p>
-<p>Ime: {{username}}</p>
+<p>Uporabniško ime: {{username}}</p>
 <p>Mail: {{email}}</p>
+<p>Ime: {{name}}</p>
+<p>Priimek: {{surname}}</p>
+<p>Država: {{country}}</p>
+<p>Naslov: {{address}}</p>
+<p>Kraj: {{city}}</p>
+<p>Poštna številka: {{zip}}</p>
 
 <br>
 <a class="button" type="button" href="logout">Odjava </a>

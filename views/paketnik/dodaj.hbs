@@ -1,15 +1,20 @@
-<h1>Dodaj paketnik</h1>
-<form action="/paketnik" method="post">
-    <label>Naziv paketnika: <input type="text" name="naziv" required></label><br><br>
-    <label>ID paketnika: <input style="margin-left: 21px" type="text" name="_idPaketnik" required></label><br><br>
 
-    <p>{{message}}</p>
+{{#if this.bool}}
+    <h1>Dodaj paketnik</h1>
+    <form action="/paketnik" method="post">
+        <label>Naziv paketnika: <input type="text" name="naziv" required></label><br><br>
+        <label>ID paketnika: <input style="margin-left: 21px" type="text" name="_idPaketnik" required></label><br><br>
 
-    <br><br>
+        <p>{{message}}</p>
 
-    <input type="hidden" name="lastnikId" value="{{req.session.userId}}">
+        <br><br>
 
-    <div class="tp">
-        <input type="submit" value="Dodaj">
-    </div>
-</form>
+        <input type="hidden" name="lastnikId" value="{{req.session.userId}}">
+
+        <div class="tp">
+            <input type="submit" value="Dodaj">
+        </div>
+    </form>
+{{else}}
+    <h1>Nimate pravice za dodajanje</h1>
+{{/if}}

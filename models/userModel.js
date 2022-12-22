@@ -6,7 +6,16 @@ let userSchema = new Schema({
     'username': String,
     'email': String,
     'password': String,
+    'name': String,
+    'surname': String,
 
+    'mailman' : Boolean,
+    'arff' : String,
+
+    'country' : String,
+    'address' : String,
+    'city' : String,
+    'zip' : String
 });
 
 userSchema.statics.authenticate = function (username, password, callback) {

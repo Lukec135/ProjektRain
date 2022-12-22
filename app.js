@@ -46,6 +46,24 @@ hbs.registerHelper('ifnoteq', function (a, b, options) {
     return options.inverse(this);
 });
 
+hbs.registerHelper('breaklines', function(text) {
+    text = hbs.Utils.escapeExpression(text);
+    text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
+    return new hbs.SafeString(text);
+});
+
+hbs.registerHelper('tab', function(text) {
+    text = hbs.Utils.escapeExpression(text);
+    text = text.replace(/\,/g,'\t\t');
+    return new hbs.SafeString(text);
+});
+
+hbs.registerHelper('select', function(selected, options) {
+    return options.fn(this).replace(
+        new RegExp(' value=\"' + selected + '\"'),
+        '$& selected="selected"');
+});
+
 ///////////////////
 
 app.engine('hbs', exphbs.engine({

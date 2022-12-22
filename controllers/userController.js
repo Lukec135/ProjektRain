@@ -1,4 +1,5 @@
 var userModel = require('../models/userModel.js');
+const PaketnikModel = require("../models/paketnikModel");
 
 /**
  * userController.js
@@ -10,7 +11,7 @@ module.exports = {
     /**
      * userController.list()
      */
-    list: function (req, res) {
+    /*list: function (req, res) {
         userModel.find(function (err, users) {
             if (err) {
                 return res.status(500).json({
@@ -20,6 +21,155 @@ module.exports = {
             }
             return res.json(users);
         });
+    },*/
+
+    list: function (req, res) {
+        let data = [];
+
+
+        if (req.session.mailman) {
+            userModel.find(function (err, users) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting user.',
+                        error: err
+                    });
+                }
+
+                data.bool = true;
+                data.users = users;
+
+                return res.render('user/list', data);
+
+            }).lean();
+        } else {
+            userModel.findOne({_id: req.session.userId}, function (err, users) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when getting user.',
+                        error: err
+                    });
+                }
+                data.bool = false;
+                data.users = users;
+
+                return res.render('user/list', data);
+
+            }).lean();
+        }
+    },
+
+    listNamesAPI: function (req, res) {
+        userModel.find(function (err, users) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            }
+            let names = "";
+            for (let i = 0; i < users.length; i++) {
+                names = names + users[i].username
+                if (i !== users.length - 1) {
+                    names = names + ",";
+                }
+            }
+
+            return res.json(
+                //list: JSON.stringify(Object.assign({}, paketniki))
+                JSON.stringify(names)
+            );
+        }).lean();
+    },
+
+    userAPI: function (req, res) {
+        let username = req.body.username;
+        userModel.findOne({username: username}, function (err, user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            }
+            return res.json({
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                arff: user.arff,
+                country: user.country,
+                address: user.address,
+                city: user.city,
+                zip: user.zip,
+                name: user.name,
+                surname: user.surname
+            });
+        }).lean();
+    },
+
+    userData: function (req, res) {
+        let id = req.params.id;
+        userModel.findOne({_id: id}, function (err, user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            }
+            let data = [];
+            data.user = user;
+
+
+            return res.render('user/userData', data);
+
+        }).lean();
+    },
+
+    addData: function (req, res) {
+        let time = req.body.time;
+        let day = req.body.day;
+        let weather = req.body.weather;
+        let holiday = req.body.holiday;
+        let signed = req.body.signed;
+        let rating = req.body.rating;
+
+        let id = req.body.dataUserId;
+
+        userModel.findOne({_id: id}, function (err, user) {
+            if (err) {
+                return res.status(500).json({
+                    message: 'Error when getting user.',
+                    error: err
+                });
+            }
+            let newData = time + "," + day + "," + weather + "," + holiday + "," + signed + "," + rating;
+            let newArff = user.arff;
+            newArff = newData + "\n" + newArff;
+
+            user.arff = newArff;
+
+            /*
+            return res.json({
+                message: newData
+            });*/
+            let data = [];
+            data.user = user;
+
+            user.save(function (err, user) {
+                if (err) {
+                    return res.status(500).json({
+                        message: 'Error when updating user.',
+                        error: err
+                    });
+                }
+
+                res.redirect('back');
+            });
+
+        })
+    },
+
+    askUser: function (req, res) {
+        res.redirect('back');
     },
 
     showLogin: function (req, res) {
@@ -39,6 +189,7 @@ module.exports = {
             } else {
                 req.session.userId = user._id;
                 req.session.userName = user.username;
+                req.session.mailman = user.mailman;
                 res.render('index', {title: 'Pametni paketnik'});
             }
         });
@@ -150,8 +301,15 @@ module.exports = {
                 let user = new userModel({
                     username: req.body.username,
                     email: req.body.email,
-                    password: req.body.password
-
+                    name: req.body.name,
+                    surname: req.body.surname,
+                    password: req.body.password,
+                    mailman: false,
+                    arff: "",
+                    country: req.body.country,
+                    address: req.body.address,
+                    city: req.body.city,
+                    zip: req.body.zip,
                 });
 
                 user.save(function (err, user) {

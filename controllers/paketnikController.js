@@ -262,7 +262,14 @@ module.exports = {
     },
 
     dodaj: function(req, res) {
-        return res.render('paketnik/dodaj');
+        let data = [];
+        if (req.session.mailman) {
+            data.bool = true;
+            return res.render('paketnik/dodaj', data);
+        } else {
+            data.bool = false;
+            return res.render('paketnik/dodaj', data);
+        }
     },
 
     /**

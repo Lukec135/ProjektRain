@@ -1,0 +1,30 @@
+
+{{#if this.bool}}
+    <h1>Vse osebe</h1>
+    {{#each users}}
+        {{#unless this.mailman}}
+            <div style="margin-bottom: 10px">
+                <a href="/users/userData/{{this._id}}">
+                    <div id="containerIntro"><h3 style="margin-bottom: 4px">{{this.username}}</h3><p>{{this.name}} {{this.surname}}</p></div> {{this.address}}, {{this.city}} {{this.zip}}</div>
+                </a>
+                <br>
+            </div>
+        {{/unless}}
+    {{/each}}
+{{else}}
+    <h1>Moji podatki</h1>
+    <div style="margin-bottom: 10px">
+        <a href="/users/userData/{{users._id}}">
+            <div id="containerIntro"><h3 style="margin-bottom: 4px">{{users.username}}</h3><p>{{users.name}} {{users.surname}}</p></div> {{users.address}}, {{users.city}} {{users.zip}}</div>
+        </a>
+        <br>
+    </div>
+{{/if}}
+
+
+
+
+
+
+
+
