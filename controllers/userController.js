@@ -3,6 +3,7 @@ const paketnikModel = require("../models/paketnikModel");
 const deliveryModel = require("../models/deliveryModel");
 const DeliveryModel = require("../models/deliveryModel");
 
+let bcrypt = require('bcrypt');
 /**
  * userController.js
  *
@@ -144,7 +145,7 @@ module.exports = {
 
 
     addToArffAPI: function (req, res) {
-        let username = req.body.username;
+        //let username = req.body.username;
         let deliveryId = req.body.deliveryId;
         let hour = req.body.hour;
         let day = req.body.day;
@@ -153,7 +154,7 @@ module.exports = {
         let signed = req.body.signed;
         let rating = req.body.rating;
 
-        userModel.findOne({username: username}, function (err, user) {
+        userModel.findOne({username: req.body.username}, function (err, user) {
             if (err) {
                 return res.status(500).json({
                     message: 'Error when getting user.',
@@ -165,6 +166,9 @@ module.exports = {
             newArff = newData + "\n" + newArff;
 
             user.arff = newArff;
+            //let before = user.password;
+            //user.password = user.password;
+            //let after = "";
 
 
             user.save(function (err, user) {
@@ -174,7 +178,10 @@ module.exports = {
                         error: err
                     });
                 }
+                //after = user.password;
             });
+            //after = user.password;
+
 
             DeliveryModel.findByIdAndRemove(deliveryId, function (err, delivery) {
                 if (err) {
@@ -185,11 +192,13 @@ module.exports = {
                 }
 
                 return res.json({
-                    message: 'success'
+                    message: 'success',
+                    //before: before,
+                    //after: after,
+                    //last: user.password
                 });
             });
-
-        })
+        });
     },
 
     showLogin: function (req, res) {
@@ -317,40 +326,46 @@ module.exports = {
                     error: err
                 });
             }
-            if (!user0) {
-                let user = new userModel({
-                    username: req.body.username,
-                    email: req.body.email,
-                    name: req.body.name,
-                    surname: req.body.surname,
-                    password: req.body.password,
-                    mailman: false,
-                    arff: "",
-                    country: req.body.country,
-                    address: req.body.address,
-                    city: req.body.city,
-                    zip: req.body.zip,
-                });
 
-                user.save(function (err, user) {
-                    if (err) {
-                        return res.status(500).json({
-                            message: 'Error when creating user',
-                            error: err
-                        });
-                    }
-                    //return res.status(201).json(user);
-                    res.render('user/login')
-                });
-            } else {
-                let error = "Uporabniško ime že obstaja."
-                const data = {
-                    message: error
-                };
-                return res.render('user/register', data);
-            }
+            bcrypt.hash(req.body.password, 10, function (err, hash) {
+                if (err) {
+                    return next(err);
+                }
+                //user.password = hash;
+                if (!user0) {
+                    let user = new userModel({
+                        username: req.body.username,
+                        email: req.body.email,
+                        name: req.body.name,
+                        surname: req.body.surname,
+                        password: hash,
+                        mailman: false,
+                        arff: "",
+                        country: req.body.country,
+                        address: req.body.address,
+                        city: req.body.city,
+                        zip: req.body.zip,
+                    });
+
+                    user.save(function (err, user) {
+                        if (err) {
+                            return res.status(500).json({
+                                message: 'Error when creating user',
+                                error: err
+                            });
+                        }
+                        //return res.status(201).json(user);
+                        res.render('user/login')
+                    });
+                } else {
+                    let error = "Uporabniško ime že obstaja."
+                    const data = {
+                        message: error
+                    };
+                    return res.render('user/register', data);
+                }
+            });
         });
-
     },
 
     /**

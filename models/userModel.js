@@ -38,6 +38,7 @@ userSchema.statics.authenticate = function (username, password, callback) {
         });
 }
 
+/*
 userSchema.pre('save', function (next) {
     var user = this;
     bcrypt.hash(user.password, 10, function (err, hash) {
@@ -47,7 +48,7 @@ userSchema.pre('save', function (next) {
         user.password = hash;
         next();
     });
-});
+}); */
 
 var User = mongoose.model('User', userSchema);
 module.exports = User;
